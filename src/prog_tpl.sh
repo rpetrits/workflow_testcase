@@ -2,29 +2,52 @@
 
 echo Running program $0
 
-data="$DATAPATH"
+script=`basename $0`
 
-pushd `dirname $0`
+pushd `dirname $0` > /dev/null
 
 # read config option from ini file
-source ``.ini
+source ${script%.*}.ini
 
-# test input vs. output files
-#if [ ! -f $data/tab_02.txt -o ! -f $data/tab_04.txt ] ; then
-#	echo Error: at least one input table does not exist!
-#	exit 1
-#fi
+# test input files exist
+for f in ${input[@]} ; do
+	if [ ! -f $data/$f ] ; then
+		echo Error: input table does not exist!
+		exit 1
+	fi
+done
 
+# find latest input
+mod_in=0
+for f in ${input[@]} ; do
+	if [ `date -r $data/$f '+%s'` -gt ${mod_in} ] ; then
+		mod_in=`date -r $data/$f '+%s'`
+	fi
+done
 
-#if [ $data/tab_12.txt -nt $data/tab_02.txt -a $data/tab_12.txt -nt $data/tab_04.txt ] ; then
-#	echo Info: results are new than the inputs...
-#	exit 0
-#fi
+# find oldest output
+mod_out=9999999999
+for f in ${output[@]} ; do
+	if [ -f $data/$f ] ; then
+		if [ `date -r $data/$f '+%s'` -lt ${mod_out} ] ; then
+			mod_out=`date -r $data/$f '+%s'`
+		fi
+	else
+		mod_out=0
+	fi
+done
+
+# quit if inputs are not updated
+if [ $mod_in -lt $mod_out ] ; then
+	echo Info: results are newer than the inputs...
+	exit 0
+fi
 
 echo -n Execution...
-sleep {{ delay }}
-#touch $data/tab_12.txt
+sleep $delay
+for f in ${output[@]} ; do
+	touch $data/$f
+done
 echo done!
 
-popd
-
+popd > /dev/null

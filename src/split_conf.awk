@@ -4,7 +4,8 @@ BEGIN {
 	FS = "="
 	fname = ""
 	n = 1
-	system("mkdir -p dist")
+	system("mkdir -p dist/data")
+	data = pwd "/dist/data"
 }
 
 $0 ~ /^[ \t]*\[/ {
@@ -26,8 +27,16 @@ $0 ~ /^[ \t]*\[/ {
 
 END {
 	for (i = 1; i < n; i++) {
-		system("mkdir -p dist/" folder[i])
-		system("mv dist/" files[i] " dist/" folder[i] "/")
+		print "data=" data > "dist/" files[i]
+		shf = files[i]
+		sub(".ini", ".sh", shf)
+		system("mkdir -p dist/code/" folder[i])
+		system("mv dist/" files[i] " dist/code/" folder[i] "/")
+		system("cp src/prog_tpl.sh dist/code/" folder[i] "/" shf)
 	}
+	for (i = 0; i < 10; i++) {
+		system("touch " data "/tab_0" i ".dat")
+	}
+
 }
 

@@ -1,2 +1,1 @@
-tab*.dat # data file used as mocked inputs
-*.sh # generated shell scripts
+/dist
