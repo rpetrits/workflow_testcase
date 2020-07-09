@@ -7,7 +7,7 @@ BEGIN {
 	"pwd -P" | getline pwd
 	close("pwd -P")
 	system("mkdir -p dist/data")
-	data = pwd "/dist/data"
+	data = "../../data"
 }
 
 NF == 3 {
@@ -34,7 +34,7 @@ NF == 3 {
 END {
 	# generate dummy data files
 	for (i = 0; i < 10; i++) {
-		system("touch " data "/tab_0" i ".dat")
+		system("touch dist/data/tab_0" i ".dat")
 	}
 	# copy example scripts
 	system("cp src/run_all dist/code/")
