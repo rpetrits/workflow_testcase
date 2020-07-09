@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# mocking a data update by touching the files
+# to be run from the code folder
+for i in {0..9} ; do
+	touch ../data/tab_0${i}.dat
+done

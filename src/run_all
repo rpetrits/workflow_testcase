@@ -1,4 +1,4 @@
 #!/bin/bash
 
-find . -type f -executable -exec {} \;
+find . -mindepth 2 -type f -executable -exec {} \;
 
